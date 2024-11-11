@@ -40,6 +40,7 @@ private:
     rclcpp::Publisher<autoware_vehicle_msgs::msg::VelocityReport>::SharedPtr velocity_pub_;//速度报告
     rclcpp::Publisher<autoware_vehicle_msgs::msg::SteeringReport>::SharedPtr steerang_pub_;//“转向角”报告
     rclcpp::Publisher<geometry_msgs::msgs::msg::TwistWithCovarianceStamped>::SharedPtr vehicle_odom_pub_;//里程计报告
+    
     // from vehicle to ros 订阅来自底盘的消息
     rclcpp::Subscription<scout_msgs::msg::ScoutStatus>::SharedPtr scout_status_sub_;//小车底盘状况
     //定时器
