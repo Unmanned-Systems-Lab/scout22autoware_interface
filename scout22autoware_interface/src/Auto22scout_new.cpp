@@ -39,8 +39,8 @@ private:
         control_cmd_ptr_ = msg;
 
         twister.linear.x = control_cmd_ptr_->longitudinal.velocity;
-        double linear_spd = 0;
-        linear_spd = twister.linear.x;
+        // double linear_spd = 0;
+        // linear_spd = twister.linear.x;
         double steer_rate = control_cmd_ptr_->lateral.steering_tire_rotation_rate;
 
         twister.angular.z = steer_rate;
