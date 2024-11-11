@@ -25,7 +25,7 @@ public:
         control_mode_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::ControlModeReport>("/vehicle/status/control_mode", rclcpp::QoS{1});//发布控制模式信息
         velocity_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::VelocityReport>("/vehicle/status/velocity_Status", rclcpp::QoS{1});//发布速度信息(线速度角速度)
         steerang_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::SteeringReport>("/vehicle/status/steering_Status", rclcpp::QoS{1});//发布角度信息
-        vehicle_odom_pub_ = this->create_publihser<geometry_msgs::msgs::msg::TwistWithCovarianceStamped>("",rclcpp::QoS{1});//发布里程计信息
+        vehicle_odom_pub_ = this->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>("vehicle_velocity_converter/twist_with_covariance",rclcpp::QoS{1});//发布里程计信息
 
         // from vehicle to ros2 订阅底盘发给ros2的消息
         scout_status_sub_ = this->create_subscription<scout_msgs::msg::ScoutStatus>("/scout_status", 1, std::bind(&Autoscoutsub::callback_scout_status, this, std::placeholders::_1));//订阅底盘发来的信息
@@ -39,7 +39,7 @@ private:
     rclcpp::Publisher<autoware_vehicle_msgs::msg::ControlModeReport>::SharedPtr control_mode_pub_;//车辆控制模式
     rclcpp::Publisher<autoware_vehicle_msgs::msg::VelocityReport>::SharedPtr velocity_pub_;//速度报告
     rclcpp::Publisher<autoware_vehicle_msgs::msg::SteeringReport>::SharedPtr steerang_pub_;//“转向角”报告
-    rclcpp::Publisher<geometry_msgs::msgs::msg::TwistWithCovarianceStamped>::SharedPtr vehicle_odom_pub_;//里程计报告
+    rclcpp::Publisher<geometry_msgs::msg::TwistWithCovarianceStamped>::SharedPtr vehicle_odom_pub_;//里程计报告
 
     // from vehicle to ros 订阅来自底盘的消息
     rclcpp::Subscription<scout_msgs::msg::ScoutStatus>::SharedPtr scout_status_sub_;//小车底盘状况
@@ -140,13 +140,18 @@ private:
     //     steerang_pub_->publish(msg);
     // }
 
-    void send_odom_data_to_autoware(geometry_msgs::msgs::msg::TwistWithCovarianceStamped msg)
+    void send_odom_data_to_autoware(geometry_msgs::msg::TwistWithCovarianceStamped msg)
     {
         msg.header.frame_id = "base_link";
         msg.header.stamp = this->get_clock()->now();
-        msg.twist.covariance = ;
-        msg.twist.twist.linear = ;
-        msg.twist.twist.angular = ;
+        msg.twist.covariance = {0,0,0,0,0,0,
+                                0,0,0,0,0,0,
+                                0,0,0,0,0,0,
+                                0,0,0,0,0,0,
+                                0,0,0,0,0,0,
+                                0,0,0,0,0,0};
+        msg.twist.twist.linear.x = linear_velocity;
+        msg.twist.twist.angular.z = angular_velocity;
         vehicle_odom_pub_->publish(msg);
     }
 
@@ -176,7 +181,7 @@ private:
         // convert_steerang_to_autoware_msg(steerang_report_msg);
 
         //发布里程计信息
-        geometry_msgs::msgs::msg::TwistWithCovarianceStamped vehicle_odom_msg;
+        geometry_msgs::msg::TwistWithCovarianceStamped vehicle_odom_msg;
         send_odom_data_to_autoware(vehicle_odom_msg);
   }
 
