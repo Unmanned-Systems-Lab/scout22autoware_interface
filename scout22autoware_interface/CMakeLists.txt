@@ -40,7 +40,8 @@ ament_target_dependencies(SCOUT2AUTO
 rclcpp
 autoware_vehicle_msgs
 tier4_vehicle_msgs
-scout_msgs )
+scout_msgs
+geometry_msgs )
 
 install(TARGETS
 SCOUT2AUTO
