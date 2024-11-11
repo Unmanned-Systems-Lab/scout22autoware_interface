@@ -40,7 +40,7 @@ private:
     rclcpp::Publisher<autoware_vehicle_msgs::msg::VelocityReport>::SharedPtr velocity_pub_;//速度报告
     rclcpp::Publisher<autoware_vehicle_msgs::msg::SteeringReport>::SharedPtr steerang_pub_;//“转向角”报告
     rclcpp::Publisher<geometry_msgs::msgs::msg::TwistWithCovarianceStamped>::SharedPtr vehicle_odom_pub_;//里程计报告
-    
+
     // from vehicle to ros 订阅来自底盘的消息
     rclcpp::Subscription<scout_msgs::msg::ScoutStatus>::SharedPtr scout_status_sub_;//小车底盘状况
     //定时器
@@ -140,6 +140,16 @@ private:
     //     steerang_pub_->publish(msg);
     // }
 
+    void send_odom_data_to_autoware(geometry_msgs::msgs::msg::TwistWithCovarianceStamped msg)
+    {
+        msg.header.frame_id = "base_link";
+        msg.header.stamp = this->get_clock()->now();
+        msg.twist.covariance = ;
+        msg.twist.twist.linear = ;
+        msg.twist.twist.angular = ;
+        vehicle_odom_pub_->publish(msg);
+    }
+
     size_t count;
     void on_timer(){
         // 给autoware的命令
@@ -164,6 +174,10 @@ private:
         // //发布转向角报告。
         // autoware_vehicle_msgs::msg::SteeringReport steerang_report_msg;
         // convert_steerang_to_autoware_msg(steerang_report_msg);
+
+        //发布里程计信息
+        geometry_msgs::msgs::msg::TwistWithCovarianceStamped vehicle_odom_msg;
+        send_odom_data_to_autoware(vehicle_odom_msg);
   }
 
 };
@@ -172,7 +186,7 @@ int main(int argc, char ** argv)
 {
   //初始化客户端
   rclcpp::init(argc,argv);
-
+  
   // 调用回旋函数
   rclcpp::spin(std::make_shared<Autoscoutsub>());
   // 释放资源
