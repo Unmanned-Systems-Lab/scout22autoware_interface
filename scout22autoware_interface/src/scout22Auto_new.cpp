@@ -119,11 +119,6 @@ private:
 
     }
 
-    // void convert_steering_to_autoware_msg(autoware_vehicle_msgs::msg::VelocityReport msg)
-    // {
-    //     msg.longitudinal_velocity = linear_velocity;
-    // }
-
     void convert_velocity_to_autoware_msg(autoware_vehicle_msgs::msg::VelocityReport msg)
     {   
         msg.longitudinal_velocity = linear_velocity;
@@ -132,13 +127,13 @@ private:
         velocity_pub_->publish(msg);
     }
 
-    // void convert_steerang_to_autoware_msg(autoware_vehicle_msgs::msg::SteeringReport msg)
-    // {
-    //     // double R_v =linear_velocity / angular_velocity;
-    //     // double tan_strang = WHEEL_BASE / R_v;
-    //     msg.steering_tire_rotation_rate = angular_velocity;
-    //     steerang_pub_->publish(msg);
-    // }
+    void convert_steerang_to_autoware_msg(autoware_vehicle_msgs::msg::SteeringReport msg)
+    {
+        double R_v =linear_velocity / angular_velocity;
+        double tan_strang = WHEEL_BASE / R_v;
+        msg.steering_tire_angle = angular_velocity;
+        steerang_pub_->publish(msg);
+    }
 
     void send_odom_data_to_autoware(geometry_msgs::msg::TwistWithCovarianceStamped msg)
     {
@@ -169,16 +164,13 @@ private:
         autoware_vehicle_msgs::msg::ControlModeReport control_mode_report_msg;
         convert_control_mode_to_autoware_msg(control_mode_report_msg);
         
-        //发布转向报告. 这里报告的是车轮的转向角，实际上SCOUT只会发布角速度
+        //发布速度报告 将AKM转换为差速底盘需要的.以及角速度.这里报告的是车轮的转向角，实际上SCOUT只会发布角速度
         autoware_vehicle_msgs::msg::VelocityReport velocity_report_msg;
-        // convert_steering_to_autoware_msg(velocity_report_msg);
-        
-        //发布速度报告 将AKM转换为差速底盘需要的.以及角速度
         convert_velocity_to_autoware_msg(velocity_report_msg);
         
-        // //发布转向角报告。
-        // autoware_vehicle_msgs::msg::SteeringReport steerang_report_msg;
-        // convert_steerang_to_autoware_msg(steerang_report_msg);
+        //发布转向角报告。控制器强制要求了这个部分
+        autoware_vehicle_msgs::msg::SteeringReport steerang_report_msg;
+        convert_steerang_to_autoware_msg(steerang_report_msg);
 
         //发布里程计信息
         geometry_msgs::msg::TwistWithCovarianceStamped vehicle_odom_msg;
