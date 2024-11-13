@@ -23,8 +23,8 @@ public:
         gear_status_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::GearReport>("/vehicle/status/gear_status", rclcpp::QoS{1});//发布档位消息。Qos{1}就是reliable的意思。
         battery_status_pub_ = this->create_publisher<tier4_vehicle_msgs::msg::BatteryStatus>("/vehicle/status/battery_charge", rclcpp::QoS{1});//发布电池信息
         control_mode_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::ControlModeReport>("/vehicle/status/control_mode", rclcpp::QoS{1});//发布控制模式信息
-        velocity_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::VelocityReport>("/vehicle/status/velocity_Status", rclcpp::QoS{1});//发布速度信息(线速度角速度)
-        steerang_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::SteeringReport>("/vehicle/status/steering_Status", rclcpp::QoS{1});//发布角度信息
+        velocity_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::VelocityReport>("/vehicle/status/velocity_status", rclcpp::QoS{1});//发布速度信息(线速度角速度)
+        steerang_pub_ = this->create_publisher<autoware_vehicle_msgs::msg::SteeringReport>("/vehicle/status/steering_status", rclcpp::QoS{1});//发布角度信息
         vehicle_odom_pub_ = this->create_publisher<geometry_msgs::msg::TwistWithCovarianceStamped>("vehicle_velocity_converter/twist_with_covariance",rclcpp::QoS{1});//发布里程计信息
 
         // from vehicle to ros2 订阅底盘发给ros2的消息
