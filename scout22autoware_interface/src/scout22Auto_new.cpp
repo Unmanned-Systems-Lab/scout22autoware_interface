@@ -129,9 +129,17 @@ private:
 
     void convert_steerang_to_autoware_msg(autoware_vehicle_msgs::msg::SteeringReport msg)
     {
-        double R_v =linear_velocity / angular_velocity;
-        double tan_strang = WHEEL_BASE / R_v;
-        msg.steering_tire_angle = angular_velocity;
+        double R_v;
+        double tan_strang;
+        if((angular_velocity==0) || (linear_velocity == 0))
+        {
+            tan_strang = 0;
+        }
+        else{
+            R_v = linear_velocity / angular_velocity;
+            tan_strang = WHEEL_BASE / R_v;
+        }
+        msg.steering_tire_angle = tan_strang;
         steerang_pub_->publish(msg);
     }
 
