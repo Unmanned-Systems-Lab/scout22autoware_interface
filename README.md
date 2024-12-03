@@ -25,11 +25,15 @@ colcon build --packages-up-to scout22autoware_interface
 ```
 ***
 ## 使用
-- 可以直接 ros2 launch scout22autoware_interface interface_v2.launch.py
-- 整体上已经include到另外一个launch文件中（vehicle_interface.launch.xml）
-- 需要启动scout的节点。
+- 可以直接启动通讯节点
+```bash 
+ros2 launch scout22autoware_interface interface_v2.launch.py
+```
 
-- 节点同步启动
+- 整体上已经include到另外一个launch文件中（vehicle_interface.launch.xml）
+- 另外需要启动scout的节点。
+
+- Scout和通讯节点同步启动
 ```bash
 ros2 launch scout22autoware_interface interface_scout.launch.py
 ```
