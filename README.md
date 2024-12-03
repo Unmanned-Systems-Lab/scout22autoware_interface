@@ -52,8 +52,70 @@ ros2 launch autoware_launch planning_simulator.launch.xml map_path:=/home/lhl/au
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-select scout22autoware_interface
 ```
+***
+## CAN通讯自动挂载设置
+当前版本由于Nvidia烧录的内核没有直接与CAN相连，故采用外接，将RX TX电平的CAN通讯进行转换。
+编写使用的脚本：(根据需求修改这些参数)
+```bash
+sudo vim /home/[你的用户名]/CAN_scripts/CAN.sh
+#你也可以使用gedit
+```
+脚本的内容：
+```bash
+sudo busybox devmem 0x0c303000 32 0x0000C400
+sudo busybox devmem 0x0c303008 32 0x0000C458
+sudo busybox devmem 0x0c303010 32 0x0000C400
+sudo busybox devmem 0x0c303018 32 0x0000C458
+sudo modprobe can
+sudo modprobe can_raw
+sudo modprobe mttcan
+sudo ip link set down can1
+sudo ip link set can1 type can bitrate 500000
+sudo ip link set up can1
+```
+编辑并保存后设置权限：
+```bash
+sudo chmod +x /home/[你的用户名]/CAN_scripts/CAN.sh
+```
+使用systemd服务
+```bash
+sudo vim /etc/systemd/system/CAN.service
+#也可以使用gedit
+```
+
+在文档中编辑
+```txt
+[Unit]
+Description=CAN service
+ 
+[Service]
+ExecStart=/home/[你的用户名]/CAN_scripts/CAN.sh
+ 
+[Install]
+WantedBy=multi-user.target
+```
+
+保存并关闭该文件，然后启动该服务并将其设置为开机自启：
+```bash
+sudo systemctl daemon-reload
+ 
+sudo systemctl start CAN.service
+ 
+sudo systemctl enable CAN.service
+```
+
+如果要检查状态：
+```bash
+sudo systemctl status CAN.service
+```
+
+如果要停止服务：
+```bash
+sudo systemctl stop CAN.service
+ 
+sudo systemctl disable CAN.service
+```
+***
 ## 说明
  - 20241122：适配v1.0的autoware文件。
- - 20241125: 正向速度、逆向转向角求解(后轴-中心 中心-中心的变换都是错误的)
-  ![中心-中心变换解析图像](https://raw.githubusercontent.com/Unmanned-Systems-Lab/scout22autoware_interface/refs/heads/v1_0/%E8%A7%A3%E6%9E%90%E5%87%BD%E6%95%B0%E5%9B%BE%E5%83%8F.png)
  - 20241203: 初步测试完毕。需要在pid横向最高级控制中加大delay_compensation这个参数(目前是1)。
