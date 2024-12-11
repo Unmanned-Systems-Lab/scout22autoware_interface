@@ -100,7 +100,7 @@ private:
             angle = 0;
         }
         else angle = atan2(WHEEL_TREAD * w,v);
-        msg.steering_tire_angle = 0;
+        msg.steering_tire_angle = angle;
         steerang_pub_->publish(msg);
     }
 
