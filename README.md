@@ -66,6 +66,7 @@ sudo vim /home/[你的用户名]/CAN_scripts/CAN.sh
 ```
 脚本的内容：
 ```bash
+#!/bin/bash
 sudo busybox devmem 0x0c303000 32 0x0000C400
 sudo busybox devmem 0x0c303008 32 0x0000C458
 sudo busybox devmem 0x0c303010 32 0x0000C400
