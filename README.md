@@ -48,7 +48,7 @@ ros2 launch autoware_launch autoware.launch.xml map_path:=$HOME/autoware_map_tes
 ```
 - Simulation
 ```bash
-ros2 launch autoware_launch planning_simulator.launch.xml map_path:=/home/lhl/autoware_map_test vehicle_model:=scout_vehicle sensor_model:=scout_sensor_kit lateral_controller_mode:=mpc
+ros2 launch autoware_launch planning_simulator.launch.xml map_path:=$HOME/autoware_map_test vehicle_model:=scout_vehicle sensor_model:=scout_sensor_kit lateral_controller_mode:=mpc
 ```
 
 - 编译&指定编译
@@ -74,9 +74,9 @@ sudo busybox devmem 0x0c303018 32 0x0000C458
 sudo modprobe can
 sudo modprobe can_raw
 sudo modprobe mttcan
-sudo ip link set down can1
-sudo ip link set can1 type can bitrate 500000
-sudo ip link set up can1
+sudo ip link set down can0
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set up can0
 ```
 编辑并保存后设置权限：
 ```bash
