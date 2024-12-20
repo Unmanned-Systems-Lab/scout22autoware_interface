@@ -122,12 +122,14 @@ sudo systemctl disable CAN.service
 ```
 ***
 ## 部分参数
-autoware launch 文件： control 里横向控制调为pure_pursuit;control-pid: delay compensation = 0.5, pid=2.0,0.3,0.1.
+ - autoware launch 文件： control 里横向控制调为pure_pursuit;
+ - control-pid: delay compensation = 0.5, pid=2.0,0.3,0.1.
 ## 部分操作
-unhealthy 出现时查不了原因则直接屏蔽
-地图名称需要在仿真和launch文件内设置
-angles/angles/  nebula_decoder 加ros绝对路径
-multi_object_tracker cmakelists 加ros绝对路径
+ - unhealthy 出现时查不了原因则直接屏蔽
+ - 地图名称需要在仿真和launch文件内设置
+ - angles/angles/  nebula_decoder 加ros绝对路径
+ - multi_object_tracker cmakelists 加ros绝对路径
+ - 安装时每一个操作都不要放过。
 ## 说明
  - 20241122：适配v1.0的autoware文件。
  - 20241203: 初步测试完毕。需要在pid横向最高级控制中加大delay_compensation这个参数(目前是1)。
