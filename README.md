@@ -58,7 +58,7 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --package
 ```
 ***
 ## CAN通讯自动挂载设置
-当前版本由于Nvidia烧录的内核没有直接与CAN相连，故采用外接，将RX TX电平的CAN通讯进行转换。
+当前版本由于Nvidia烧录的内核没有直接与CAN相连，故采用外接，使用RX TX 进行CAN通讯。
 编写使用的脚本：(根据需求修改这些参数)
 ```bash
 sudo vim /home/[你的用户名]/CAN_scripts/CAN.sh
@@ -121,6 +121,14 @@ sudo systemctl stop CAN.service
 sudo systemctl disable CAN.service
 ```
 ***
+## 部分参数
+autoware launch 文件： control 里横向控制调为pure_pursuit;control-pid: delay compensation = 0.5, pid=2.0,0.3,0.1.
+## 部分操作
+unhealthy 出现时查不了原因则直接屏蔽
+地图名称需要在仿真和launch文件内设置
+angles/angles/  nebula_decoder 加ros绝对路径
+multi_object_tracker cmakelists 加ros绝对路径
 ## 说明
  - 20241122：适配v1.0的autoware文件。
  - 20241203: 初步测试完毕。需要在pid横向最高级控制中加大delay_compensation这个参数(目前是1)。
+ - 20241220: 完成固定版本安装
